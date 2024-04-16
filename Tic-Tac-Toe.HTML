@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic Tac Toe</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-image: url('background _image.jpg'); /* Set your background image path */
+        background-size: cover;
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .board {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-gap: 5px;
+        background-color: lightblue; /* Semi-transparent white background */
+        padding: 10px;
+        border-radius: 10px;
+    }
+    .cell {
+        width: 100px;
+        height: 100px;
+        background-color: #eee; /* Light gray background for cells */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 36px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="board" id="board">
+        <!-- Cells will be generated dynamically -->
+    </div>
+</div>
+
+<script>
+    // Initialize the board
+    const board = document.getElementById('board');
+    const cells = Array.from({ length: 9 });
+
+    // Create the cells
+    cells.forEach((_, index) => {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.index = index;
+        cell.addEventListener('click', () => cellClicked(cell));
+        board.appendChild(cell);
+    });
+
+    // Variables to keep track of game state
+    let currentPlayer = 'X';
+    let winner = null;
+    let gameState = ['', '', '', '', '', '', '', '', ''];
+
+    // Function to handle cell click event
+    function cellClicked(clickedCell) {
+        const index = clickedCell.dataset.index;
+        if (!winner && gameState[index] === '') {
+            gameState[index] = currentPlayer;
+            clickedCell.textContent = currentPlayer;
+            checkWinner();
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        }
+    }
+
+    // Function to check for a winner
+    function checkWinner() {
+        const winningConditions = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+        for (let condition of winningConditions) {
+            const [a, b, c] = condition;
+            if (gameState[a] && gameState[a] === gameState[b] && gameState[a] === gameState[c]) {
+                winner = gameState[a];
+                alert(`Player ${winner} wins!`);
+                return;
+            }
+        }
+        if (!gameState.includes('')) {
+            alert("It's a draw!");
+        }
+    }
+</script>
+
+</body>
+</html>
